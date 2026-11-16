@@ -1,0 +1,10 @@
+timee-ts>=0.1.1
+mantis-tsfm>=1.1.0
+torch>=2.0
+tensorflow>=2.16
+numpy
+scipy
+scikit-learn
+pandas
+matplotlib
+tabulate
