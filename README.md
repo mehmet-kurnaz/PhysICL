@@ -1,10 +1,5 @@
 # PhysICL: Physics-Prior In-Context Learning for Few-Shot Bearing Fault Diagnosis on Unseen Machines
 
-Code for the paper
-
-> M. Kurnaz and C. Alagöz, "PhysICL: Physics-Prior In-Context Learning for Few-Shot Bearing Fault Diagnosis on Unseen
-> Machines," submitted to *IEEE Transactions on Instrumentation and Measurement*, 2026.
-
 PhysICL fine-tunes the in-context time-series classifier [TimEE](https://huggingface.co/liamsbhoo/timee) **only on
 episodes from a randomized physics simulator of rotating machines**, with no real data, and queries it with the raw
 vibration window and its Hilbert envelope. On a new machine the model receives a few labelled windows per health state
@@ -26,11 +21,10 @@ new machine: k labelled windows per class + unlabelled queries ──► raw vie
 | `pilot2/views.py` | Raw and envelope (500-Hz high-pass + Hilbert) views at inference |
 | `pilot2/evaluate.py`, `pilot2/analysis.py` | Evaluation of fine-tuned models and the preregistered statistical analysis (paired Wilcoxon, Holm, non-inferiority) |
 | `pilot2/plan.py` | The three paper stages A (held-out datasets, training seeds), B (ablations), C (simulator variant, replication) |
-| `pilot2/fidelity.py` | Simulator–measurement coverage analysis (Section V-C of the paper) |
+| `pilot2/fidelity.py` | Simulator–measurement coverage analysis |
 | `pilot2/ONKAYIT*.md` | Preregistrations, written and dated before each confirmatory run (in Turkish, unchanged) |
 | `pilot1/` | Data loaders (CWRU, SEU, Paderborn, JNU, HIT-SM), leakage-free episode sampler, baselines (TimEE, MantisV2 + LR, envelope spectrum, WDCNN, ProtoNet) |
 | `run_pilot1.py`, `run_pilot2.py`, `pu_sanity.py` | Entry points (settings block at the top of each file, or `key=value` arguments) |
-| `figures/` | Scripts that produce the figures of the paper from the result files |
 
 Code comments and console messages are in Turkish; identifiers and this README are in English where it matters.
 
@@ -60,13 +54,13 @@ All signals are resampled to 12 kHz and cut into non-overlapping 1024-sample win
 share a recording; the grouping that separates them (operating condition, bearing or defect) is fixed per dataset in
 `pilot1/data.py` (`SPLIT_MODE`).
 
-## Reproducing the paper
+## Running the experiments
 
 To check the installation, `python run_pilot2.py adim=ABC --test` and `python run_pilot1.py --synthetic --random-init-fm`
 run the whole pipeline in a few minutes on synthetic data with random weights.
 
 ```bash
-# Baselines on the development datasets (Table III, external baselines)
+# Baselines on the development datasets
 python run_pilot1.py --data-root data --datasets cwru,seu,pu --methods timee_raw,mantisv2_lr,env_proto
 
 # Fine-tune PhysICL (physics prior) and the control prior, 2000 steps each
@@ -82,21 +76,13 @@ python run_pilot2.py adim=ABC
 # Simulator–measurement coverage analysis
 python run_pilot2.py adim=uyum
 
-# Same-bearing vs. different-bearing check on Paderborn (Fig. 1)
+# Same-bearing vs. different-bearing check on Paderborn
 python pu_sanity.py
 ```
 
 Results are written to `results/` and `results_pilot2/` (`A_sonuc.md`, `B_sonuc.md`, `C_sonuc.md`, per-episode CSV files).
 Naming: `fizik_*` is the physics prior (PhysICL), `genel_*` the control prior, `hazir` the untouched TimEE; the view
 suffix `|ham+zarf` is raw + envelope.
-
-Figures:
-
-```bash
-python figures/make_figures.py results_pilot2 figures/out
-PYTHONPATH=. python figures/method_figure.py figures/out
-PYTHONPATH=. python figures/fidelity_figure.py results_pilot2/uyum figures/out
-```
 
 ## Using the simulator on its own
 
@@ -118,18 +104,6 @@ Health states: `N, OR, IR, B, OR+IR, UNB, MIS, LOOSE`.
 
 On the authors' single consumer GPU, stages A and B took about 1.5 hours each and stage C about 1 hour. Episodes are
 generated on CPU workers (about 50 ms per episode on one core). TimEE and MantisV2 evaluation needs a GPU.
-
-## Citation
-
-```bibtex
-@article{kurnaz2026physicl,
-  author  = {Kurnaz, Mehmet and Alag{\"o}z, Celal},
-  title   = {{PhysICL}: Physics-Prior In-Context Learning for Few-Shot Bearing Fault Diagnosis on Unseen Machines},
-  journal = {IEEE Transactions on Instrumentation and Measurement},
-  note    = {Submitted},
-  year    = {2026}
-}
-```
 
 ## License
 
