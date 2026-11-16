@@ -20,7 +20,7 @@ new machine: k labelled windows per class + unlabelled queries ──► raw vie
 | `pilot2/finetune.py` | Episodic fine-tuning of TimEE on either prior |
 | `pilot2/views.py` | Raw and envelope (500-Hz high-pass + Hilbert) views at inference |
 | `pilot2/evaluate.py`, `pilot2/analysis.py` | Evaluation of fine-tuned models and the preregistered statistical analysis (paired Wilcoxon, Holm, non-inferiority) |
-| `pilot2/plan.py` | The three paper stages A (held-out datasets, training seeds), B (ablations), C (simulator variant, replication) |
+| `pilot2/plan.py` | The three experiment stages A (held-out datasets, training seeds), B (ablations), C (simulator variant, replication) |
 | `pilot2/fidelity.py` | Simulator–measurement coverage analysis |
 | `pilot2/ONKAYIT*.md` | Preregistrations, written and dated before each confirmatory run (in Turkish, unchanged) |
 | `pilot1/` | Data loaders (CWRU, SEU, Paderborn, JNU, HIT-SM), leakage-free episode sampler, baselines (TimEE, MantisV2 + LR, envelope spectrum, WDCNN, ProtoNet) |
@@ -70,7 +70,7 @@ python run_pilot2.py adim=ince_ayar onsel=genel etiket=genel_v1
 # Preregistered confirmation on new development episodes (seed 1)
 python run_pilot2.py adim=v1_dogrulama
 
-# Paper stages: A = held-out datasets + 3 training seeds, B = ablations, C = simulator v1 + replication (seed 2)
+# Experiment stages: A = held-out datasets + 3 training seeds, B = ablations, C = simulator v1 + replication (seed 2)
 python run_pilot2.py adim=ABC
 
 # Simulator–measurement coverage analysis
